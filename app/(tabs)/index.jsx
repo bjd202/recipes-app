@@ -1,6 +1,7 @@
 import recipes from '@/data/recipes.json';
+import { MaterialIcons } from '@expo/vector-icons';
 import { router, useRouter } from 'expo-router';
-import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const data = recipes.recipes
 console.log(data);
@@ -18,6 +19,10 @@ const renderItem = ({ item }) => (
 export default function Index() {
   const router = useRouter();
 
+  const handlePress = () => {
+    router.push({pathname: '/create'});
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -25,6 +30,10 @@ export default function Index() {
         renderItem={renderItem}
         keyExtractor={item => item.id}
       />
+
+      <TouchableOpacity style={styles.fab} onPress={handlePress}>
+        <MaterialIcons name="add" size={32} color="white" />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -62,5 +71,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#fff'
+  },
+  fab: {
+    position: 'absolute',
+    bottom: 40,
+    right: 30,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#007AFF', // 원하는 색상
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5, // 안드로이드 그림자
+    shadowColor: '#000', // iOS 그림자
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
 });

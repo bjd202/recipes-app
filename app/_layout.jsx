@@ -10,6 +10,12 @@ export default function RootLayout() {
           title: '상세 정보',
         }}
       />
+      <Stack.Screen 
+        name="create"
+        options={{
+          title: '등록',
+        }}
+      />
     </Stack>
   );
 }
