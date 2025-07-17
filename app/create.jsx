@@ -1,5 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from 'expo-image-picker';
+import { router } from "expo-router";
 import { useState } from "react";
 import { Alert, Button, Image, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
@@ -44,6 +46,42 @@ export default function CreateScreen() {
         const newIngredients = [...ingredients];
         newIngredients.splice(index, 1);
         setIngredients(newIngredients);
+    };
+
+    const handleRegister = async () => {
+        if (!title.trim() || !desc.trim() || ingredients.length === 0 || ingredients.some(i => !i.trim())) {
+            Alert.alert('입력 오류', '필수 정보를 모두 입력하세요.');
+            return;
+        }
+
+        // 레시피 오브젝트 생성
+        const newRecipe = {
+            id: Date.now().toString(),
+            image,
+            title,
+            ingredients: ingredients.filter(i => i.trim()),
+            desc,
+        };
+
+        try {
+            // 기존 레시피 목록 불러오기
+            const origin = await AsyncStorage.getItem('recipes.json');
+            const recipes = origin ? JSON.parse(origin) : [];
+            // 새 항목 추가
+            const updated = [...recipes, newRecipe];
+            // 저장
+            await AsyncStorage.setItem('recipes.json', JSON.stringify(updated));
+            Alert.alert('저장 완료', '레시피가 등록되었습니다.');
+            // 입력값 초기화(선택)
+            setTitle('');
+            setIngredients(['']);
+            setDesc('');
+            setImage(null);
+
+            router.push({pathname: '/'});
+        } catch (e) {
+            Alert.alert('저장 실패', '레시피 저장 중 오류가 발생했습니다.');
+        }
     };
 
     return(
@@ -110,6 +148,7 @@ export default function CreateScreen() {
                     width: 100,
                     borderRadius: 5,
                 })}
+                onPress={handleRegister}
             >
                 <Text style={{color: '#ffffff', textAlign: "center"}}>등록</Text>
             </Pressable>

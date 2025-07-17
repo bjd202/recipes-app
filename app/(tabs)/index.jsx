@@ -1,12 +1,35 @@
-import recipes from '@/data/recipes.json';
+// import recipes from '@/data/recipes.json';
 import { MaterialIcons } from '@expo/vector-icons';
-import { router, useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const data = recipes.recipes
-console.log(data);
 
-const renderItem = ({ item }) => (
+
+export default function Index() {
+  const router = useRouter();
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    // const unsubscribe = router.addListener('focus', loadRecipes); // 화면 포커스마다 재로드: Expo Router에서만
+    loadRecipes();
+    // return unsubscribe;
+  }, [router]);
+
+  // 레시피 목록 불러오기
+  const loadRecipes = async () => {
+    try {
+      const origin = await AsyncStorage.getItem('recipes.json');
+      const recipes = origin ? JSON.parse(origin) : [];
+      setData(recipes);
+    } catch (e) {
+      setData([]);
+      // 필요시 에러 처리
+    }
+  };
+
+  const renderItem = ({ item }) => (
   <Pressable 
     onPress={() => router.push({pathname: '/detail', params: item})}
     style={styles.itemContainer}
@@ -15,9 +38,6 @@ const renderItem = ({ item }) => (
     <Text style={styles.itemTitle}>{item.title}</Text>
   </Pressable>
 );
-
-export default function Index() {
-  const router = useRouter();
 
   const handlePress = () => {
     router.push({pathname: '/create'});
