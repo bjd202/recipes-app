@@ -1,8 +1,19 @@
-import { useLocalSearchParams } from "expo-router";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function DetailScreen() {
+  const router = useRouter();
+
   const { id, title, ingredients, desc, image } = useLocalSearchParams();
+
+
+  const handleEdit = () => {
+    router.push({pathname: 'edit', params: {id}});
+  }
+
+  const handleDelete = () => {
+
+  }
 
   return (
     <View style={styles.container}>
@@ -13,6 +24,32 @@ export default function DetailScreen() {
         <Text style={{ color: '#ffffff', fontSize: 24, }}>
           {desc}
         </Text>
+      </View>
+
+      <View style={{flexDirection: 'row', }}>
+        <Pressable style={({ pressed }) => ({
+              backgroundColor: pressed ? '#959ee9ff' : '#3e51f7ff', 
+              padding: 10, 
+              width: 100,
+              borderRadius: 5,
+          })}
+          onPress={handleEdit}
+        >
+          <Text style={{color: '#ffffff', textAlign: "center"}}>수정</Text>
+        </Pressable>
+        
+        <View style={{margin: 10}}></View>
+
+        <Pressable style={({ pressed }) => ({
+              backgroundColor: pressed ? '#ebababff' : '#f10404ff', 
+              padding: 10, 
+              width: 100,
+              borderRadius: 5,
+          })}
+          onPress={handleDelete}
+        >
+          <Text style={{color: '#ffffff', textAlign: "center"}}>삭제</Text>
+        </Pressable>
       </View>
     </View>
   );
