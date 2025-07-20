@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -11,8 +12,17 @@ export default function DetailScreen() {
     router.push({pathname: 'edit', params: {id}});
   }
 
-  const handleDelete = () => {
-
+  const handleDelete = async () => {
+    console.log("test");
+    try {
+      const origin = await AsyncStorage.getItem('recipes.json');
+      let recipes = origin ? JSON.parse(origin) : [];
+      recipes = recipes.filter(r => r.id !== id);
+      await AsyncStorage.setItem('recipes.json', JSON.stringify(recipes));
+      router.replace('/');
+    } catch(e) {
+      
+    }
   }
 
   return (

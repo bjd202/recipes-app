@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Swipeable } from 'react-native-gesture-handler';
 
 
 
@@ -29,15 +30,32 @@ export default function Index() {
     }
   };
 
+  const renderRightActions = (item) => (
+    <Pressable
+      style={styles.deleteBox}
+      onPress={() => handleDelete(item.id)}
+    >
+      <Text style={styles.deleteText}>삭제</Text>
+    </Pressable>
+  );
+
+  const handleDelete = async (id) => {
+    const filtered = data.filter(item => item.id !== id);
+    setData(filtered);
+    await AsyncStorage.setItem('recipes.json', JSON.stringify(filtered));
+  };
+
   const renderItem = ({ item }) => (
-  <Pressable 
-    onPress={() => router.push({pathname: '/detail', params: item})}
-    style={styles.itemContainer}
-  >
-    <Image source={{ uri: item.image }} style={styles.itemImage} />
-    <Text style={styles.itemTitle}>{item.title}</Text>
-  </Pressable>
-);
+    <Swipeable renderRightActions={() => renderRightActions(item)}>
+      <Pressable 
+        onPress={() => router.push({pathname: '/detail', params: item})}
+        style={styles.itemContainer}
+      >
+        <Image source={{ uri: item.image }} style={styles.itemImage} />
+        <Text style={styles.itemTitle}>{item.title}</Text>
+      </Pressable>
+    </Swipeable>
+  );
 
   const handlePress = () => {
     router.push({pathname: '/create'});
@@ -108,4 +126,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
   },
+    deleteBox: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e44',
+    width: 80,
+    height: '100%',
+    borderRadius: 8,
+    marginVertical: 4,
+  },
+  deleteText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+
 });
