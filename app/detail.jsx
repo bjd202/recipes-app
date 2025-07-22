@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function DetailScreen() {
   const router = useRouter();
@@ -13,7 +13,6 @@ export default function DetailScreen() {
   }
 
   const handleDelete = async () => {
-    console.log("test");
     try {
       const origin = await AsyncStorage.getItem('recipes.json');
       let recipes = origin ? JSON.parse(origin) : [];
@@ -26,7 +25,7 @@ export default function DetailScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Image source={{ uri: image }} style={styles.image} />
       <Text style={{color: '#ffffff', fontSize: 48, fontWeight: 'bold'}}>{title}</Text>
       <Text style={{color: '#ffffff', fontSize: 24, marginTop: 20}}>재료: {ingredients}</Text>
@@ -36,7 +35,7 @@ export default function DetailScreen() {
         </Text>
       </View>
 
-      <View style={{flexDirection: 'row', }}>
+      <View style={{flexDirection: 'row', marginBottom: 10}}>
         <Pressable style={({ pressed }) => ({
               backgroundColor: pressed ? '#959ee9ff' : '#3e51f7ff', 
               padding: 10, 
@@ -61,12 +60,12 @@ export default function DetailScreen() {
           <Text style={{color: '#ffffff', textAlign: "center"}}>삭제</Text>
         </Pressable>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: "center", paddingTop: 20, backgroundColor: '#25292e', },
+  container: { alignItems: "center", paddingTop: 20, backgroundColor: '#25292e', },
   image: { width: 400, height: 400, borderRadius: 16, marginBottom: 20 },
   title: { fontSize: 24, fontWeight: "bold" },
 });
