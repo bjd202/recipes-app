@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from 'expo-image-picker';
 import { router } from "expo-router";
 import { useState } from "react";
-import { Alert, Button, Image, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Button, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function CreateScreen() {
 
@@ -85,7 +85,7 @@ export default function CreateScreen() {
     };
 
     return(
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
 
             <Pressable style={({ pressed }) => ({
                     backgroundColor: pressed ? '#959ee9ff' : '#3e51f7ff', 
@@ -147,18 +147,18 @@ export default function CreateScreen() {
                     padding: 10, 
                     width: 100,
                     borderRadius: 5,
+                    marginBottom: 10,
                 })}
                 onPress={handleRegister}
             >
                 <Text style={{color: '#ffffff', textAlign: "center"}}>등록</Text>
             </Pressable>
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: '#25292e',
         alignItems: 'center',
         // justifyContent: 'center',
